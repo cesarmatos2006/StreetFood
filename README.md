@@ -1,2 +1,2 @@
-# app_Vendedores_Rua
+# StreetFood
 App para encontrar vendedores ambulantes
