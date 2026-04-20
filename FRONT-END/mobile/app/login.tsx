@@ -126,14 +126,14 @@ export default function Login() {
 
     try {
       // Troque pela sua URL real:
-      // const res = await fetch('https://api.seuapp.com/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email: email.trim(), password: senha }),
-      // });
-      // const data = await res.json();
-      // if (!res.ok) throw new Error(data.message);
-      // await AsyncStorage.setItem('user', JSON.stringify(data.user));
+       const res = await fetch('http://192.168.15.110:3000/auth/login', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password: senha }),
+       });
+       const data = await res.json();
+       if (!res.ok) throw new Error(data.message);
+       await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
       // Mock local enquanto o backend não está pronto:
       await new Promise(r => setTimeout(r, 800));
