@@ -125,7 +125,7 @@ router.get("/proximos", async (req, res) => {
     `;
     const params = [];
 
-    if (categorias_id) {
+    if (categoria_id) {
         query += " AND v.categoria_id = ?";
         params.push(categoria_id);
     }
