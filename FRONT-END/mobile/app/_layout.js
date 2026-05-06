@@ -3,20 +3,25 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { AuthProvider, useAuth } from '../hooks/useAuth';
 
 function RootRedirect() {
-  const { user } = useAuth();
-  const router = useRouter();
+  const { user, ready } = useAuth();
+  const router  = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
-    const inAuthGroup = segments[0] === '(auth)';
-    const inTabsGroup = segments[0] === '(tabs)';
+    // ✅ Não redireciona antes de ler o AsyncStorage —
+    //    evita o flash de tela branca/login no iOS
+    if (!ready) return;
 
-    if (user && (inAuthGroup || segments[0] === undefined)) {
+    const inAuth = segments[0] === '(auth)';
+    const inTabs = segments[0] === '(tabs)';
+    const inRoot = segments[0] === undefined;
+
+    if (user && (inAuth || inRoot)) {
       router.replace('/home');
-    } else if (!user && inTabsGroup) {
+    } else if (!user && inTabs) {
       router.replace('/');
     }
-  }, [user, segments]);
+  }, [user, segments, ready]);
 
   return null;
 }

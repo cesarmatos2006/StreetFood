@@ -215,7 +215,7 @@ router.post("/:id/horarios", (req, res) => {
         `INSERT INTO horarios (vendedor_id, dia_semana, abertura, fechamento, fechado)
         VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(vendedor_id, dia_semana) DO UPDATE SET
-            abertura = excluded.abertura
+            abertura = excluded.abertura,
             fechamento = excluded.fechamento,
             fechado = excluded.fechado`
     );
@@ -257,7 +257,7 @@ router.post("/:id/avaliacoes", (req, res) => {
 
     db.run(
         `INSERT INTO avaliacoes (vendedor_id, nota, comentario, autor_nome)
-        VALUES (?, ?, ?, ?)`
+        VALUES (?, ?, ?, ?)`,
         [id, nota, comentario, autor_nome],
         function (err) {
             if (err) return res.status(500).json({ mensagem: "Erro interno.", erro: err.message });
@@ -271,7 +271,7 @@ router.get("/:id/avaliacoes", (req, res) => {
         `SELECT * FROM avaliacoes WHERE vendedor_id = ? ORDER BY criado_em DESC`,
         [req.params.id],
         (err, rows) => {
-            if (err) return req.status(500).json({ mensagem: "Erro interno.", erro: err.message });
+            if (err) return res.status(500).json({ mensagem: "Erro interno.", erro: err.message });
             res.json(rows);
         }
     );

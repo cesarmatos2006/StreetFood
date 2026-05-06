@@ -12,13 +12,13 @@ export default function Home() {
   const router = useRouter();
   const { user } = useAuth();
 
-  const [vendedores, setVendedores] = useState([]);
-  const [categorias, setCategorias] = useState([{ id: null, nome: 'Todos' }]);
+  const [vendedores,     setVendedores]     = useState([]);
+  const [categorias,     setCategorias]     = useState([{ id: null, nome: 'Todos' }]);
   const [catSelecionada, setCatSelecionada] = useState(null);
-  const [busca, setBusca] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [coords, setCoords] = useState(null);
+  const [busca,          setBusca]          = useState('');
+  const [loading,        setLoading]        = useState(true);
+  const [refreshing,     setRefreshing]     = useState(false);
+  const [coords,         setCoords]         = useState(null);
 
   const carregarDados = useCallback(async (lat, lon) => {
     try {
@@ -90,7 +90,7 @@ export default function Home() {
         />
       </View>
 
-      {/* Categorias */}
+      {/* ✅ Categorias compactas */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -146,7 +146,9 @@ export default function Home() {
                 <View style={s.cardTags}>
                   <View style={[s.tag, item.aberto_agora ? s.tagAberto : s.tagFechado]}>
                     <Text style={[s.tagText, item.aberto_agora ? s.tagTextAberto : s.tagTextFechado]}>
-                      {item.aberto_agora === null ? 'Sem horário' : item.aberto_agora ? 'Aberto' : 'Fechado'}
+                      {item.aberto_agora === null
+                        ? 'Sem horário'
+                        : item.aberto_agora ? 'Aberto' : 'Fechado'}
                     </Text>
                   </View>
                   {item.avaliacao_media && (
@@ -169,6 +171,7 @@ export default function Home() {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#0E0E12' },
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -180,14 +183,12 @@ const s = StyleSheet.create({
   greeting: { fontSize: 13, color: '#888' },
   userName: { fontSize: 20, fontWeight: '700', color: '#fff' },
   avatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 42, height: 42, borderRadius: 21,
     backgroundColor: '#FF6B2B',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center', justifyContent: 'center',
   },
   avatarText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -197,59 +198,62 @@ const s = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: 18,
     paddingHorizontal: 12,
-    marginBottom: 16,
+    marginBottom: 8,        // ✅ colado nos chips
     gap: 8,
   },
-  searchIcon: { fontSize: 16 },
+  searchIcon:  { fontSize: 16 },
   searchInput: { flex: 1, color: '#fff', fontSize: 14, paddingVertical: 12 },
-  catScroll: { paddingHorizontal: 18, gap: 8, marginBottom: 16 },
+
+  catScroll: {
+    paddingHorizontal: 18,
+    gap: 8,
+    alignItems: 'center',
+    flexGrow: 0,
+    maxHeight: 44,          // ✅ trava a altura — impede o scroll de crescer
+    marginBottom: 12,
+  },
   catChip: {
+    height: 34,                 // altura fixa e compacta
     paddingHorizontal: 16,
-    paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: '#2A2A35',
-  },
-  catChipActive: { backgroundColor: '#FF6B2B', borderColor: '#FF6B2B' },
-  catText: { color: '#888', fontSize: 13, fontWeight: '600' },
-  catTextActive: { color: '#fff' },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#fff',
-    paddingHorizontal: 18,
-    marginBottom: 12,
-  },
-  list: { paddingHorizontal: 18, paddingBottom: 24, gap: 12 },
-  card: {
-    backgroundColor: '#18181F',
-    borderWidth: 1.5,
-    borderColor: '#2A2A35',
-    borderRadius: 16,
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  thumb: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    backgroundColor: '#FF6B2B22',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardInfo: { flex: 1, gap: 3 },
-  cardName: { fontSize: 15, fontWeight: '600', color: '#fff' },
-  cardMeta: { fontSize: 12, color: '#666' },
-  cardTags: { flexDirection: 'row', gap: 6, marginTop: 2 },
-  tag: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
-  tagAberto: { backgroundColor: '#1A3D2B' },
-  tagFechado: { backgroundColor: '#2A1A1A' },
-  tagStar: { backgroundColor: '#2A2A10', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
-  tagText: { fontSize: 11, fontWeight: '600' },
+  catChipActive: { backgroundColor: '#FF6B2B', borderColor: '#FF6B2B' },
+  catText:       { color: '#888', fontSize: 13, fontWeight: '600' },
+  catTextActive: { color: '#fff' },
+
+  sectionTitle: {
+    fontSize: 16, fontWeight: '700', color: '#fff',
+    paddingHorizontal: 18, marginBottom: 12,
+  },
+
+  list: { paddingHorizontal: 18, paddingBottom: 24, gap: 12 },
+
+  card: {
+    backgroundColor: '#18181F',
+    borderWidth: 1.5, borderColor: '#2A2A35',
+    borderRadius: 16, padding: 14,
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+  },
+  thumb: {
+    width: 56, height: 56, borderRadius: 12,
+    backgroundColor: '#FF6B2B22',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  cardInfo:      { flex: 1, gap: 3 },
+  cardName:      { fontSize: 15, fontWeight: '600', color: '#fff' },
+  cardMeta:      { fontSize: 12, color: '#666' },
+  cardTags:      { flexDirection: 'row', gap: 6, marginTop: 2 },
+  tag:           { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
+  tagAberto:     { backgroundColor: '#1A3D2B' },
+  tagFechado:    { backgroundColor: '#2A1A1A' },
+  tagStar:       { backgroundColor: '#2A2A10', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
+  tagText:       { fontSize: 11, fontWeight: '600' },
   tagTextAberto: { color: '#4CAF50' },
-  tagTextFechado: { color: '#E24B4A' },
-  dist: { fontSize: 12, color: '#888' },
+  tagTextFechado:{ color: '#E24B4A' },
+  dist:  { fontSize: 12, color: '#888' },
   empty: { color: '#555', textAlign: 'center', marginTop: 40, fontSize: 15 },
 });

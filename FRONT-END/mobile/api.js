@@ -2,7 +2,7 @@
 //  api.js — troque BASE_URL pelo IP do seu computador
 //  Ex: http://192.168.1.105:3000
 // ─────────────────────────────────────────────────────────────
-const BASE_URL = 'http://192.168.0.9:3000';
+const BASE_URL = 'http://192.168.100.26:3000';
 
 const get = (path) =>
   fetch(`${BASE_URL}${path}`).then((r) => r.json());

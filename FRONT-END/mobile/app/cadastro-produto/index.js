@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   SafeAreaView, Alert, ActivityIndicator, KeyboardAvoidingView,
@@ -9,13 +9,37 @@ import { api } from '../../api';
 import { useAuth } from '../../hooks/useAuth.js';
 
 export default function CadastroProduto() {
-  const router = useRouter();
-  const { user } = useAuth();
+  const router    = useRouter();
+  const { user, isVendedor } = useAuth();
 
-  const [nome, setNome] = useState('');
+  const [nome,      setNome]      = useState('');
   const [descricao, setDescricao] = useState('');
-  const [preco, setPreco] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [preco,     setPreco]     = useState('');
+  const [loading,   setLoading]   = useState(false);
+
+  // ✅ CORREÇÃO CRÍTICA: guarda na própria tela —
+  //    mesmo que alguém navegue diretamente para /cadastro-produto,
+  //    clientes são barrados aqui e redirecionados.
+  useEffect(() => {
+    if (!isVendedor) {
+      Alert.alert(
+        'Acesso restrito',
+        'Somente vendedores podem cadastrar produtos.',
+        [{ text: 'Voltar', onPress: () => router.replace('/home') }]
+      );
+    }
+  }, [isVendedor]);
+
+  // Não renderiza nada, enquanto o guarda redireciona
+  if (!isVendedor) {
+    return (
+      <SafeAreaView style={s.safe}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator color="#FF6B2B" />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const handleSalvar = async () => {
     if (!nome || !preco) {
@@ -23,7 +47,7 @@ export default function CadastroProduto() {
       return;
     }
     if (!user?.id) {
-      Alert.alert('Atenção', 'Você precisa estar logado.');
+      Alert.alert('Atenção', 'Você precisa estar logado como vendedor.');
       return;
     }
 
@@ -93,7 +117,7 @@ export default function CadastroProduto() {
             keyboardType="decimal-pad"
           />
 
-          {/* Preview */}
+          {/* Prévia */}
           {(nome || preco) && (
             <View style={s.preview}>
               <Text style={s.previewLabel}>Prévia</Text>
@@ -126,51 +150,39 @@ export default function CadastroProduto() {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#0E0E12' },
+  safe:      { flex: 1, backgroundColor: '#0E0E12' },
   container: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 40, gap: 12 },
-  back: { marginBottom: 8 },
-  backText: { color: '#888', fontSize: 15 },
-  title: { fontSize: 24, fontWeight: '700', color: '#fff' },
-  sub: { fontSize: 14, color: '#666', marginBottom: 8 },
-  label: { fontSize: 12, color: '#888', fontWeight: '500' },
+  back:      { marginBottom: 8 },
+  backText:  { color: '#888', fontSize: 15 },
+  title:     { fontSize: 24, fontWeight: '700', color: '#fff' },
+  sub:       { fontSize: 14, color: '#666', marginBottom: 8 },
+  label:     { fontSize: 12, color: '#888', fontWeight: '500' },
   input: {
     backgroundColor: '#18181F',
-    borderWidth: 1.5,
-    borderColor: '#2A2A35',
-    borderRadius: 12,
-    padding: 14,
-    fontSize: 15,
-    color: '#fff',
+    borderWidth: 1.5, borderColor: '#2A2A35',
+    borderRadius: 12, padding: 14,
+    fontSize: 15, color: '#fff',
   },
-  preview: { gap: 8 },
+  preview:      { gap: 8 },
   previewLabel: { fontSize: 12, color: '#888', fontWeight: '500' },
   previewCard: {
     backgroundColor: '#18181F',
-    borderWidth: 1.5,
-    borderColor: '#FF6B2B44',
-    borderRadius: 14,
-    padding: 12,
-    flexDirection: 'row',
-    gap: 12,
-    alignItems: 'center',
+    borderWidth: 1.5, borderColor: '#FF6B2B44',
+    borderRadius: 14, padding: 12,
+    flexDirection: 'row', gap: 12, alignItems: 'center',
   },
   previewThumb: {
-    width: 52,
-    height: 52,
-    borderRadius: 10,
+    width: 52, height: 52, borderRadius: 10,
     backgroundColor: '#2A2A35',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center', justifyContent: 'center',
   },
-  previewName: { fontSize: 14, fontWeight: '600', color: '#fff', marginBottom: 3 },
-  previewDesc: { fontSize: 12, color: '#666', marginBottom: 4 },
+  previewName:  { fontSize: 14, fontWeight: '600', color: '#fff', marginBottom: 3 },
+  previewDesc:  { fontSize: 12, color: '#666', marginBottom: 4 },
   previewPrice: { fontSize: 16, fontWeight: '700', color: '#FF6B2B' },
   btnPrimary: {
     backgroundColor: '#FF6B2B',
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
+    borderRadius: 14, paddingVertical: 16,
+    alignItems: 'center', marginTop: 8,
   },
   btnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
 });
